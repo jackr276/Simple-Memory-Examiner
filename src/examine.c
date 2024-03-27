@@ -61,9 +61,11 @@ void dumpStringContents(char* arg, int argLength){
 	//Push to the last 8-byte aligned address
 	arg -= (nibble % 8);
 
-	for(int sum = 0; sum <= argLength + argLength % 8; sum+=8){
+	//Keep printing out 8 bytes until we exceed total arglength(some extra at the end is fine)
+	for(int sum = 0; sum <= argLength; sum+=8){
 		printf("|");
-		
+	
+		//On each iteration, print out 8 bytes, MSB first LSB last
 		for(int j = 7; j > -1; j--){
 			unsigned char BYTE = *(arg + j);
 			//Print out hexadecimal version of BYTE
