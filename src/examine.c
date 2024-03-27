@@ -21,6 +21,8 @@ int main(int argc, char** argv){
 
 	for(int i = 0; i < argc; i++){
 		printf("argv[%d] | ", i);
+		//increment by i to iterate over the contents of the argv array
+		//dumpPtrContents(argv+i);
 		dumpPtrContents(&argv[i]);
 		printf("\n");
 	}
