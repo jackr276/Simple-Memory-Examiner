@@ -12,13 +12,14 @@
 int main(int argc, char** argv){
 	//Predeclare prototypes of all needed functions
 	void dumpPtrContents(void* ptr);
-	void dumpStringContents(char* arg, int argLength);
+	void dumpArgContents(char* arg, int argLength);
 
 	//First print out the argv pointer
 	printf("\nargv    | ");
 	dumpPtrContents(&argv);
 	printf("\n");
 
+	//Print out the address of every command line argument using the argv pointer
 	for(int i = 0; i < argc; i++){
 		printf("argv[%d] | ", i);
 		//increment by i to iterate over the contents of the argv array
@@ -31,19 +32,20 @@ int main(int argc, char** argv){
 	//exactly how much to print out
 	int argLength = 0;
 	for(int i = 0; i < argc; i++){
-		//Add the length of the string plus 1 for the null character
+		//we want the entire size(null terminator included)
 		argLength += strlen(argv[i]) + 1;
 	}
 
-	//Call the dumpStringContents function to handle printing the arguments
-	dumpStringContents(*argv, argLength);
+	//Call the dumpArgContents function to handle printing the arguments
+	dumpArgContents(*argv, argLength);
 
 	return 0;
 }
 
 
 /**
- * Prints out the contents(which are an address) contained in the pointer ptr
+ * This function prints out the contents(which are an address) contained in the pointer ptr
+ * The parameter is of type void* to allow for the passing of any type of pointer that we'd like
  */
 void dumpPtrContents(void* ptr){	
 	//cast to unsigned char* to allow for dereferencing	
@@ -57,21 +59,29 @@ void dumpPtrContents(void* ptr){
 	printf("| %p\n", ptr);
 }
 
-void dumpStringContents(char* arg, int argLength){
-	//perform initial adjustment to make sure arg is 8-Byte aligned
-	unsigned short nibble = (long long)arg & 0xF;
-	//Push to the last 8-byte aligned address
-	arg -= (nibble % 8);
-	
+
+/**
+ * This function prints out the contents of the command line arguments(arg), that are of length
+ * arglength. The function will adjust arg so that its memory address is 8-byte aligned(hex address
+ * ends in 0 or 8) for neatness
+ */
+void dumpArgContents(char* arg, int argLength){
+	//Calculate the adjustment factor -> this is how much we need to push back the arg ptr
+	//to make it 8-byte aligned
+	unsigned short adjustment = ((long long)arg) % 8;
+
+	//Apply the adjustment constant to push arg back to the last 8-byte aligned address
+	arg -= adjustment;
 	//Adjust argLength by how much we pushed back the arg pointer
-	argLength += (nibble % 8);
+	argLength += adjustment;
 
 	//Keep printing out 8 bytes until we exceed total arglength(some extra at the end is fine)
-	for(int sum = 0; sum <= argLength; sum+=8){
+	for(int sum = 0; sum < argLength; sum+=8){
 		printf("|");
 	
 		//On each iteration, print out 8 bytes, MSB first LSB last
 		for(int j = 7; j > -1; j--){
+			//Grab the byte that we want
 			unsigned char BYTE = *(arg + j);
 			//Print out hexadecimal version of BYTE
 			printf("%02hhx(", BYTE);
@@ -82,14 +92,13 @@ void dumpStringContents(char* arg, int argLength){
 			} else {
 				printf("\\%d", BYTE);
 			}
-
 			printf(") ");
 		}
 	
 	//Print out the address of arg at the very end
 	printf(" | %p\n\n", arg);
 
-	//increment arg by 8
+	//increment arg by 8, since we've now iterated through 8 bytes(char = 1 byte)
 	arg+=8;
 	}
 }
