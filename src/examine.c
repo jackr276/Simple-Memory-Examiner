@@ -62,6 +62,9 @@ void dumpStringContents(char* arg, int argLength){
 	unsigned short nibble = (long long)arg & 0xF;
 	//Push to the last 8-byte aligned address
 	arg -= (nibble % 8);
+	
+	//Adjust argLength by how much we pushed back the arg pointer
+	argLength += (nibble % 8);
 
 	//Keep printing out 8 bytes until we exceed total arglength(some extra at the end is fine)
 	for(int sum = 0; sum <= argLength; sum+=8){
