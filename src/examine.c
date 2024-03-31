@@ -16,6 +16,7 @@ int main(int argc, char** argv){
 
 	//First print out the argv pointer
 	printf("\nargv    | ");
+	//We want the address of argv, so use &
 	dumpPtrContents(&argv);
 	printf("\n");
 
