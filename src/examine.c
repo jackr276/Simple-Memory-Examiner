@@ -9,6 +9,10 @@
 #include <string.h>
 
 
+/**
+ * The main function simply takes in command line arguments, and makes appropriate calls to 
+ * dumpPtrContents and dumpArgContents, passing in the needed paramaters. 
+ */
 int main(int argc, char** argv){
 	//Predeclare prototypes of all needed functions
 	void dumpPtrContents(void* ptr);
