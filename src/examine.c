@@ -1,7 +1,8 @@
 /**
  * Author: Jack Robbins
- * 04/05/2024
- * Homework 06 - only problem(argv memory content examiner)
+ * This program acts as a simple "memory dumper" that prints out the memory addresses of the contents
+ * passed through to this program in argv. All memory contents are printed out with 8-byte aligned & adjusted
+ * addresses, for neantess
  */
 
 #include <ctype.h>
